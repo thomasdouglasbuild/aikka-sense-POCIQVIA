@@ -1,1 +1,270 @@
-PLACEHOLDER_VISIBRAIN
+[
+  {
+    "name": "Sanofi",
+    "platform": "tiktok",
+    "uuid": "dca83a16-38d5-41f8-b05f-588d1cdf2d6d",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "No permissions to view monitoring rules"
+  },
+  {
+    "name": "Sanofi",
+    "platform": "youtube",
+    "uuid": "4ba18574-e44f-4b9c-8feb-0e4485cb2033",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "No permissions to view monitoring rules"
+  },
+  {
+    "name": "Sanofi",
+    "platform": "facebook",
+    "uuid": "b8952419-ef2e-4ac8-944d-39252eef71bd",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "No permissions to view monitoring rules"
+  },
+  {
+    "name": "Sanofi",
+    "platform": "instagram",
+    "uuid": "d38a98e6-e95b-4097-a324-e6cad1be9d25",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "No permissions to view monitoring rules"
+  },
+  {
+    "name": "Sanofi",
+    "platform": "linkedin",
+    "uuid": "21155c96-7dda-4f1f-b56e-9a583a4f88cd",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "No permissions to view monitoring rules (LinkedIn topic)"
+  },
+  {
+    "name": "Sanofi",
+    "platform": "threads",
+    "uuid": "9f1555b2-4525-4c31-b9cf-bf3b518f63bb",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "No permissions to view monitoring rules"
+  },
+  {
+    "name": "Sanofi",
+    "platform": "telegram",
+    "uuid": "53de7067-8c22-4463-bf2d-a00d8002ccbb",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "No permissions to view monitoring rules"
+  },
+  {
+    "name": "Sanofi",
+    "platform": "twitter",
+    "uuid": "7d954a20-7e78-4cfa-b5d5-9902c3b5bf76",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "No permissions to view monitoring rules (Twitter/X topic). Created: 30 Apr 2019. Updated: 27 Feb 2026."
+  },
+  {
+    "name": "Sanofi",
+    "platform": "bluesky",
+    "uuid": "df20e64c-10b3-4570-ae9c-6ad24f164e68",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "No permissions to view monitoring rules"
+  },
+  {
+    "name": "Sanofi",
+    "platform": "news",
+    "uuid": "378d274c-6b8c-4347-8ddc-4fbc18ab8649",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "No permissions to view monitoring rules"
+  },
+  {
+    "name": "Test_Dermato_Lymhome_L1",
+    "platform": "linkedin",
+    "uuid": "34b745bf-0ae5-4ef0-b809-ebde291fdc54",
+    "status": "active",
+    "monitoring_rules": {
+      "type": "monitored_scope",
+      "keywords": [
+        "\"dermatologie\"",
+        "\"dermatologique\"",
+        "\"dermatology\"",
+        "GFELC"
+      ],
+      "users": [],
+      "companies": [],
+      "note": "ORs, negations and operators are not available for LinkedIn. Quotes used to group terms."
+    },
+    "created": "17 f\u00e9vr. 2026 11:13",
+    "updated": "17 f\u00e9vr. 2026 15:41"
+  },
+  {
+    "name": "Test_Dermato_Lymphome",
+    "platform": "twitter",
+    "uuid": "24830aa5-bd69-4fb2-9b5e-1a40aa9376c3",
+    "status": "active",
+    "monitoring_rules": {
+      "type": "rules",
+      "rules": [
+        "\"mycosis fongo\u00efde\" OR \"mycosis fungoides\" lang:fr",
+        "\"lymphome cutan\u00e9\" OR \"lymphome T cutan\u00e9\" lang:fr",
+        "\"cutaneous lymphoma\" OR \"cutaneous T-cell lymphoma\" lang:fr",
+        "\"syndrome de S\u00e9zary\" OR \"Sezary syndrome\" lang:fr",
+        "\"lymphome cutan\u00e9 primitif\" lang:fr",
+        "\"parapsoriasis en plaques\" lang:fr",
+        "\"GFELC\" lang:fr",
+        "(\"lymphome cutan\u00e9\" OR \"mycosis fongo\u00efde\" \"onco-dermatologie\") lang:fr",
+        "\"DU onco-dermatologie\" lang:fr",
+        "\"DIU dermatologie\" \"lymphom\" lang:fr",
+        "#JDP2026 OR #JDP2025 OR \"Journ\u00e9es Dermatologiques de Paris\" lang:fr",
+        "#EADV2026 OR #EADV2025 lang:fr",
+        "#SFD2026 OR \"Soci\u00e9t\u00e9 Fran\u00e7aise de Dermatologie\" lang:fr",
+        "\"World Congress of Cutaneous Lymphomas\" lang:fr"
+      ]
+    },
+    "created": "17 f\u00e9vr. 2026 11:08",
+    "updated": "18 f\u00e9vr. 2026 14:34"
+  },
+  {
+    "name": "Test_Dermato_Lymphome",
+    "platform": "news",
+    "uuid": "f448410b-aa37-4284-adcf-a30177d0a14c",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "News source topic - monitoring rules not retrieved"
+  },
+  {
+    "name": "test_dermato_lymphome",
+    "platform": "instagram",
+    "uuid": "06d38af0-75bb-4fc6-b77f-586396cb1ada",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "Instagram topic - monitoring rules not retrieved"
+  },
+  {
+    "name": "test_dermato_lymphome",
+    "platform": "facebook",
+    "uuid": "65efa231-d835-4f2c-961d-581bfbac2f8d",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "Facebook topic - monitoring rules not retrieved"
+  },
+  {
+    "name": "test_dermato_r\u00e9seauGFELC",
+    "platform": "news",
+    "uuid": "4f3a8172-4647-4985-86c0-ea686666e192",
+    "status": "active",
+    "monitoring_rules": null,
+    "note": "News source topic - monitoring rules not retrieved"
+  },
+  {
+    "name": "Test_dermato_traitementlymphome",
+    "platform": "twitter",
+    "uuid": "9a86f9c6-b8b8-4f96-92df-9657cd3d6972",
+    "status": "active",
+    "monitoring_rules": {
+      "type": "rules",
+      "rules": [
+        "\"chlorm\u00e9thine\"",
+        "\"m\u00e9chlor\u00e9thamine\" \"mechlorethamine\"",
+        "\"nitrogen mustard\" \"carmustine\"",
+        "\"mogamulizumab\"",
+        "\"brentuximab\"",
+        "\"romid\u00e9psin\"",
+        "\"photoph\u00e9r\u00e8se extracorporelle\"",
+        "\"phototh\u00e9rapie UVB\"",
+        "\"electron beam\" \"irradiation corporelle totale\"",
+        "\"m\u00e9thotrexate lymphome cutan\u00e9\"",
+        "\"interf\u00e9ron lymphome cutan\u00e9\"",
+        "\"greffe allog\u00e9nique lymphome cutan\u00e9\""
+      ]
+    },
+    "created": "17 f\u00e9vr. 2026 11:18",
+    "updated": "17 f\u00e9vr. 2026 11:29"
+  },
+  {
+    "name": "test_dermato_lymphome",
+    "platform": "facebook",
+    "uuid": "da4aafd1-18a1-4d2d-9fd6-b93636f3b8e2",
+    "status": "inactive",
+    "monitoring_rules": null,
+    "note": "Inactive Facebook topic - monitoring rules not retrieved"
+  },
+  {
+    "name": "Twitter_bios",
+    "platform": "twitter",
+    "uuid": "a18816d9-e269-4b10-b23f-877094986847",
+    "status": "inactive",
+    "monitoring_rules": {
+      "type": "rules",
+      "rules": [
+        "(bio:h\u00e9matologue OR bio:h\u00e9matologie OR bio:hematolog OR bio:\"h\u00e9mato\" OR bio:\"PH h\u00e9mato\") lang:fr followers_count:100",
+        "(bio:oncologue OR bio:oncologie OR bio:oncologist OR bio:\"onco-dermato\" OR bio:\"onco-derm\" OR bio:\"oncologie cutan\u00e9e\") lang:fr followers_count:100",
+        "(bio:dermatologue OR bio:dermatologie OR bio:dermatologist OR bio:\"derm\" OR bio:\"PH dermato\") lang:fr followers_count:100",
+        "(bio:pathologiste OR bio:anatomopatholog OR bio:pathologist OR bio:\"anapath\" OR bio:dermatopatholog) lang:fr followers_count:50"
+      ]
+    },
+    "created": "17 f\u00e9vr. 2026 11:44",
+    "updated": "17 f\u00e9vr. 2026 15:20"
+  },
+  {
+    "_metadata": {
+      "type": "quotas_and_account_info",
+      "extracted_at": "2026-02-27T21:03:00Z",
+      "main_sources": {
+        "platforms_included": ["bluesky", "facebook", "instagram", "threads", "tiktok", "youtube", "telegram", "news"],
+        "active_keywords": {
+          "used": 40,
+          "total": 50,
+          "percentage": 80.0
+        },
+        "active_channels": {
+          "used": 0,
+          "total": 500,
+          "percentage": 0.0
+        },
+        "active_topics": 8,
+        "free_active_topics": 8,
+        "free_active_keywords": 8,
+        "inactive_topics": 1
+      },
+      "twitter": {
+        "tweets_current_month": {
+          "month": "f\u00e9vrier 2026",
+          "used": 16150,
+          "total": 20000,
+          "percentage": 80.8
+        },
+        "projected_end_of_month": {
+          "tweets": 16797,
+          "percentage": 84.0
+        },
+        "previous_months": {
+          "janvier 2026": 0,
+          "d\u00e9cembre 2025": 0,
+          "novembre 2025": 0,
+          "octobre 2025": 0,
+          "septembre 2025": 0,
+          "ao\u00fbt 2025": 0
+        },
+        "active_twitter_topics": 3,
+        "free_twitter_topics": 1,
+        "inactive_twitter_topics": 1
+      },
+      "linkedin": {
+        "active_rules": {
+          "used": 4,
+          "total": 2,
+          "percentage": 200.0,
+          "over_quota": true
+        },
+        "active_topics": 2,
+        "free_active_topics": 1,
+        "free_active_rules": 2,
+        "inactive_topics": 0
+      },
+      "account_validity": "Feb 13 2027"
+    }
+  }
+]
