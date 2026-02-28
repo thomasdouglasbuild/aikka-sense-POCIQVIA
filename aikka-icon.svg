@@ -1,1 +1,10 @@
-PLACEHOLDER_ICON
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="iconGrad" x1="60" y1="10" x2="60" y2="110" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#333"/>
+      <stop offset="100%" stop-color="#000"/>
+    </linearGradient>
+  </defs>
+  <path d="M60 8C52 8 46 18 42 28C36 16 28 10 20 14C12 18 10 30 14 42C6 40 0 44 0 52C0 60 6 68 16 70C8 76 6 84 10 92C14 96 22 98 30 94C28 104 30 112 38 114C46 116 54 108 60 98C66 108 74 116 82 114C90 112 92 104 90 94C98 98 106 96 110 92C114 84 112 76 104 70C114 68 120 60 120 52C120 44 114 40 106 42C110 30 108 18 100 14C92 10 84 16 78 28C74 18 68 8 60 8Z" fill="url(#iconGrad)"/>
+  <ellipse cx="60" cy="56" rx="14" ry="20" fill="white"/>
+</svg>
