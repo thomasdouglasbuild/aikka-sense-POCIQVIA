@@ -96,8 +96,8 @@
       "companies": [],
       "note": "ORs, negations and operators are not available for LinkedIn. Quotes used to group terms."
     },
-    "created": "17 f\u00e9vr. 2026 11:13",
-    "updated": "17 f\u00e9vr. 2026 15:41"
+    "created": "17 févr. 2026 11:13",
+    "updated": "17 févr. 2026 15:41"
   },
   {
     "name": "Test_Dermato_Lymphome",
@@ -107,24 +107,24 @@
     "monitoring_rules": {
       "type": "rules",
       "rules": [
-        "\"mycosis fongo\u00efde\" OR \"mycosis fungoides\" lang:fr",
-        "\"lymphome cutan\u00e9\" OR \"lymphome T cutan\u00e9\" lang:fr",
+        "\"mycosis fongoïde\" OR \"mycosis fungoides\" lang:fr",
+        "\"lymphome cutané\" OR \"lymphome T cutané\" lang:fr",
         "\"cutaneous lymphoma\" OR \"cutaneous T-cell lymphoma\" lang:fr",
-        "\"syndrome de S\u00e9zary\" OR \"Sezary syndrome\" lang:fr",
-        "\"lymphome cutan\u00e9 primitif\" lang:fr",
+        "\"syndrome de Sézary\" OR \"Sezary syndrome\" lang:fr",
+        "\"lymphome cutané primitif\" lang:fr",
         "\"parapsoriasis en plaques\" lang:fr",
         "\"GFELC\" lang:fr",
-        "(\"lymphome cutan\u00e9\" OR \"mycosis fongo\u00efde\" \"onco-dermatologie\") lang:fr",
+        "(\"lymphome cutané\" OR \"mycosis fongoïde\" \"onco-dermatologie\") lang:fr",
         "\"DU onco-dermatologie\" lang:fr",
         "\"DIU dermatologie\" \"lymphom\" lang:fr",
-        "#JDP2026 OR #JDP2025 OR \"Journ\u00e9es Dermatologiques de Paris\" lang:fr",
+        "#JDP2026 OR #JDP2025 OR \"Journées Dermatologiques de Paris\" lang:fr",
         "#EADV2026 OR #EADV2025 lang:fr",
-        "#SFD2026 OR \"Soci\u00e9t\u00e9 Fran\u00e7aise de Dermatologie\" lang:fr",
+        "#SFD2026 OR \"Société Française de Dermatologie\" lang:fr",
         "\"World Congress of Cutaneous Lymphomas\" lang:fr"
       ]
     },
-    "created": "17 f\u00e9vr. 2026 11:08",
-    "updated": "18 f\u00e9vr. 2026 14:34"
+    "created": "17 févr. 2026 11:08",
+    "updated": "18 févr. 2026 14:34"
   },
   {
     "name": "Test_Dermato_Lymphome",
@@ -151,7 +151,7 @@
     "note": "Facebook topic - monitoring rules not retrieved"
   },
   {
-    "name": "test_dermato_r\u00e9seauGFELC",
+    "name": "test_dermato_réseauGFELC",
     "platform": "news",
     "uuid": "4f3a8172-4647-4985-86c0-ea686666e192",
     "status": "active",
@@ -166,22 +166,22 @@
     "monitoring_rules": {
       "type": "rules",
       "rules": [
-        "\"chlorm\u00e9thine\"",
-        "\"m\u00e9chlor\u00e9thamine\" \"mechlorethamine\"",
+        "\"chlorméthine\"",
+        "\"méchloréthamine\" \"mechlorethamine\"",
         "\"nitrogen mustard\" \"carmustine\"",
         "\"mogamulizumab\"",
         "\"brentuximab\"",
-        "\"romid\u00e9psin\"",
-        "\"photoph\u00e9r\u00e8se extracorporelle\"",
-        "\"phototh\u00e9rapie UVB\"",
+        "\"romidépsin\"",
+        "\"photophérèse extracorporelle\"",
+        "\"photothérapie UVB\"",
         "\"electron beam\" \"irradiation corporelle totale\"",
-        "\"m\u00e9thotrexate lymphome cutan\u00e9\"",
-        "\"interf\u00e9ron lymphome cutan\u00e9\"",
-        "\"greffe allog\u00e9nique lymphome cutan\u00e9\""
+        "\"méthotrexate lymphome cutané\"",
+        "\"interféron lymphome cutané\"",
+        "\"greffe allogénique lymphome cutané\""
       ]
     },
-    "created": "17 f\u00e9vr. 2026 11:18",
-    "updated": "17 f\u00e9vr. 2026 11:29"
+    "created": "17 févr. 2026 11:18",
+    "updated": "17 févr. 2026 11:29"
   },
   {
     "name": "test_dermato_lymphome",
@@ -199,14 +199,14 @@
     "monitoring_rules": {
       "type": "rules",
       "rules": [
-        "(bio:h\u00e9matologue OR bio:h\u00e9matologie OR bio:hematolog OR bio:\"h\u00e9mato\" OR bio:\"PH h\u00e9mato\") lang:fr followers_count:100",
-        "(bio:oncologue OR bio:oncologie OR bio:oncologist OR bio:\"onco-dermato\" OR bio:\"onco-derm\" OR bio:\"oncologie cutan\u00e9e\") lang:fr followers_count:100",
+        "(bio:hématologue OR bio:hématologie OR bio:hematolog OR bio:\"hémato\" OR bio:\"PH hémato\") lang:fr followers_count:100",
+        "(bio:oncologue OR bio:oncologie OR bio:oncologist OR bio:\"onco-dermato\" OR bio:\"onco-derm\" OR bio:\"oncologie cutanée\") lang:fr followers_count:100",
         "(bio:dermatologue OR bio:dermatologie OR bio:dermatologist OR bio:\"derm\" OR bio:\"PH dermato\") lang:fr followers_count:100",
         "(bio:pathologiste OR bio:anatomopatholog OR bio:pathologist OR bio:\"anapath\" OR bio:dermatopatholog) lang:fr followers_count:50"
       ]
     },
-    "created": "17 f\u00e9vr. 2026 11:44",
-    "updated": "17 f\u00e9vr. 2026 15:20"
+    "created": "17 févr. 2026 11:44",
+    "updated": "17 févr. 2026 15:20"
   },
   {
     "_metadata": {
@@ -231,7 +231,7 @@
       },
       "twitter": {
         "tweets_current_month": {
-          "month": "f\u00e9vrier 2026",
+          "month": "février 2026",
           "used": 16150,
           "total": 20000,
           "percentage": 80.8
@@ -242,11 +242,11 @@
         },
         "previous_months": {
           "janvier 2026": 0,
-          "d\u00e9cembre 2025": 0,
+          "décembre 2025": 0,
           "novembre 2025": 0,
           "octobre 2025": 0,
           "septembre 2025": 0,
-          "ao\u00fbt 2025": 0
+          "août 2025": 0
         },
         "active_twitter_topics": 3,
         "free_twitter_topics": 1,
