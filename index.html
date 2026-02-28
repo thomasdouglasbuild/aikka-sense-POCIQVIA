@@ -1,1 +1,798 @@
-PLACEHOLDER_INDEX_HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aikka Sense v3.1 — Pharma Intelligence Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script src="./data.js"></script>
+</head>
+<body>
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo-wrap">
+      <img src="./aikka-icon.jpg" alt="Aikka" class="sidebar-logo" onerror="this.style.display='none'" />
+      <span class="sidebar-brand-text">Aikka Sense</span>
+    </div>
+    <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Collapse sidebar">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <div class="sidebar-search">
+    <input type="text" class="sidebar-search-input" placeholder="Search…" id="sidebarSearchInput" />
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Boards</div>
+    <a class="nav-item" data-page="home" href="#home">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 6.5L8 1.5L14 6.5V14C14 14.55 13.55 15 13 15H10V10H6V15H3C2.45 15 2 14.55 2 14V6.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="nav-label">Projects</span>
+    </a>
+
+    <div class="nav-section-label">Intelligence</div>
+    <a class="nav-item" data-page="dashboard" href="#dashboard">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <span class="nav-label">Dashboard</span>
+    </a>
+    <a class="nav-item" data-page="geo" href="#geo">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5C8 1.5 10.5 5 10.5 8C10.5 11 8 14.5 8 14.5M8 1.5C8 1.5 5.5 5 5.5 8C5.5 11 8 14.5 8 14.5M1.5 8H14.5" stroke="currentColor" stroke-width="1.3"/></svg>
+      </span>
+      <span class="nav-label">GEO &amp; SEO</span>
+    </a>
+    <a class="nav-item" data-page="publications" href="#publications">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2.5C3 1.95 3.45 1.5 4 1.5H11.5L14 4V13.5C14 14.05 13.55 14.5 13 14.5H4C3.45 14.5 3 14.05 3 13.5V2.5Z" stroke="currentColor" stroke-width="1.5"/><path d="M11.5 1.5V4H14" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.5 7H10.5M5.5 9.5H10.5M5.5 12H8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </span>
+      <span class="nav-label">Publications</span>
+    </a>
+    <a class="nav-item" data-page="kol" href="#kol">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 14.5C2 11.5 4.5 10 8 10C11.5 10 14 11.5 14 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </span>
+      <span class="nav-label">KOL &amp; Rising Stars</span>
+    </a>
+    <a class="nav-item" data-page="trials" href="#trials">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5.5 1.5V6.5L2.5 13.5H13.5L10.5 6.5V1.5M5.5 1.5H10.5M5.5 1.5H3.5M10.5 1.5H12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="nav-label">Clinical Trials</span>
+    </a>
+    <a class="nav-item" data-page="social" href="#social">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="3.5" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="12.5" cy="3.5" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="12.5" cy="12.5" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M6 7L10 4.5M6 9L10 11.5" stroke="currentColor" stroke-width="1.3"/></svg>
+      </span>
+      <span class="nav-label">Social Intelligence</span>
+    </a>
+    <a class="nav-item" data-page="landscape" href="#landscape">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 11.5L5 6.5L8 9.5L11.5 4L15 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 15H15" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </span>
+      <span class="nav-label">Digital Landscape</span>
+    </a>
+    <a class="nav-item" data-page="sources" href="#sources">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 1V3.5M8 12.5V15M1 8H3.5M12.5 8H15M2.9 2.9L4.7 4.7M11.3 11.3L13.1 13.1M13.1 2.9L11.3 4.7M4.7 11.3L2.9 13.1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </span>
+      <span class="nav-label">Sources &amp; Config</span>
+    </a>
+    <a class="nav-item" data-page="reports" href="#reports">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 3C3 2.45 3.45 2 4 2H10L13 5V13C13 13.55 12.55 14 12 14H4C3.45 14 3 13.55 3 13V3Z" stroke="currentColor" stroke-width="1.5"/><path d="M10 2V5H13" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.5 8.5H10.5M5.5 11H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </span>
+      <span class="nav-label">Reports &amp; Planning</span>
+    </a>
+
+    <div class="nav-divider"></div>
+    <div class="nav-ai-label">AI Tools</div>
+    <a class="nav-item" id="navCopilot" href="#">
+      <span class="nav-icon">
+        <svg viewBox="0 0 32 32" width="16" height="16"><circle cx="16" cy="16" r="16" fill="#111111"/><path d="M16 6C12 6 8 14 8 20c0 3 2 6 8 6s8-3 8-6c0-6-4-14-8-14zm0 14c-1.5 0-3-1-3-3 0-2 1.5-5 3-5s3 3 3 5c0 2-1.5 3-3 3z" fill="#00E1FF"/></svg>
+      </span>
+      <span class="nav-label">Aikka Copilot</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-board-indicator" id="sidebarBoardBtn">
+      <span class="board-dot"></span>
+      <span class="board-name" id="sidebarBoardName">Ledaga · CTCL · France</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════════ MAIN WRAPPER ═══════════════ -->
+<div class="main-wrapper" id="mainWrapper">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button class="topbar-menu-btn" id="topbarMenuBtn">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 4.5H16M2 9H16M2 13.5H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <div class="topbar-breadcrumb">
+      <span>Aikka Sense</span>
+      <span class="topbar-breadcrumb-sep">/</span>
+      <span class="topbar-breadcrumb-page" id="breadcrumbPage">Projects</span>
+    </div>
+    <div class="topbar-right">
+      <span class="status-badge">OpenAlex Live</span>
+      <span class="status-badge">ClinicalTrials Live</span>
+      <div style="position:relative;">
+        <div class="board-selector" id="boardSelectorBtn">
+          <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22C55E"/></svg>
+          <span class="board-selector-text" id="boardSelectorText">Ledaga · CTCL · France</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="board-dropdown" id="boardDropdown"></div>
+      </div>
+      <button class="chat-toggle-btn" id="chatToggleBtnTop">
+        <svg viewBox="0 0 20 20" width="14" height="14"><circle cx="10" cy="10" r="10" fill="none"/><path d="M10 3C6 3 3 8 3 12c0 2 1.3 4 7 4s7-2 7-4c0-4-3-9-7-9zm0 9c-1 0-2-.7-2-2 0-1.3 1-3.3 2-3.3s2 2 2 3.3c0 1.3-1 2-2 2z" fill="#00E1FF"/></svg>
+        Aikka Copilot
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- ═════════════ PAGE: HOME / PROJECTS ═════════════ -->
+    <div class="page" id="page-home">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Your Intelligence Boards</div>
+          <div class="page-subtitle">Manage pharma intelligence projects by brand, indication, and geography</div>
+        </div>
+        <button class="btn btn-primary" id="createBoardBtn">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1V13M1 7H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          New Board
+        </button>
+      </div>
+
+      <div class="grid-auto" id="boardsGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- ═════════════ PAGE: DASHBOARD ═════════════ -->
+    <div class="page hidden" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Dashboard</div>
+          <div class="page-subtitle">Cross-source intelligence overview for <span id="dashBoardLabel">Ledaga · CTCL · France</span></div>
+        </div>
+        <div class="filter-chip-group">
+          <button class="filter-chip active">Q1 2026</button>
+          <button class="filter-chip">All Time</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">GEO Score (avg)</div>
+          <div class="kpi-value" id="kpiGeoScore">—</div>
+          <div class="kpi-delta up">+3 pts vs Q4 2025</div>
+          <div class="kpi-sparkline"><canvas id="sparkPub"></canvas></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Publications Found</div>
+          <div class="kpi-value" id="kpiPublications">—</div>
+          <div class="kpi-delta up">+12% YoY</div>
+          <div class="kpi-sparkline"><canvas id="sparkSocial"></canvas></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Active KOLs (FR)</div>
+          <div class="kpi-value" id="kpiKols">29</div>
+          <div class="kpi-delta">GFELC Network</div>
+          <div class="kpi-sparkline"><canvas id="sparkTrials"></canvas></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Active Trials</div>
+          <div class="kpi-value" id="kpiTrials">7</div>
+          <div class="kpi-delta up">TELLOMAK 3 launching H1 2026</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="charts-row">
+        <div class="card">
+          <div class="card-title">Digital Footprint Radar</div>
+          <div class="card-subtitle">Multi-dimension intelligence coverage</div>
+          <canvas id="footprintChart" height="240"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title">GEO vs SEO Overview</div>
+          <div class="card-subtitle">AI visibility vs traditional search performance</div>
+          <canvas id="geoSeoChart" height="240"></canvas>
+        </div>
+      </div>
+
+      <!-- Bottom row -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Recent Intelligence Signals</div>
+          <div class="card-subtitle">Auto-detected from all sources</div>
+          <div id="dashRecentSignals">
+            <div class="timeline-item"><div class="timeline-dot-col"><div class="timeline-dot pub"></div></div><div class="timeline-content"><div class="timeline-type">Publication</div><div class="timeline-title">CUTALLO Trial — Long-term OS Results (JCO 2025)</div></div><div class="timeline-ts">2d ago</div></div>
+            <div class="timeline-item"><div class="timeline-dot-col"><div class="timeline-dot congress"></div></div><div class="timeline-content"><div class="timeline-type">Congress</div><div class="timeline-title">EADV 2025 Bordeaux — CTCL Algorithm Update</div></div><div class="timeline-ts">3d ago</div></div>
+            <div class="timeline-item"><div class="timeline-dot-col"><div class="timeline-dot trial"></div></div><div class="timeline-content"><div class="timeline-type">Trial</div><div class="timeline-title">TELLOMAK 3 Phase 3 FDA IND Cleared</div></div><div class="timeline-ts">1w ago</div></div>
+            <div class="timeline-item"><div class="timeline-dot-col"><div class="timeline-dot social"></div></div><div class="timeline-content"><div class="timeline-type">Social Signal</div><div class="timeline-title">Dupilumab/CTCL controversy trending on X</div></div><div class="timeline-ts">2w ago</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Top Recommendations</div>
+          <div class="card-subtitle">AI-generated strategic actions</div>
+          <div id="dashRecommendations"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════════ PAGE: GEO & SEO ═════════════ -->
+    <div class="page hidden" id="page-geo">
+      <div class="page-header">
+        <div>
+          <div class="page-title">GEO &amp; SEO Scores</div>
+          <div class="page-subtitle">AI visibility and search performance for Ledaga / CTCL France</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-group" style="margin-bottom:20px;">
+        <button class="tab-btn active" data-tab="geo-analysis">GEO Analysis</button>
+        <button class="tab-btn" data-tab="seo-analysis">SEO Analysis</button>
+        <button class="tab-btn" data-tab="cross-ref">Cross-Reference</button>
+      </div>
+
+      <!-- TAB: GEO Analysis -->
+      <div class="tab-panel" id="tab-geo-analysis">
+        <div class="geo-scores-grid" id="geoScoresGrid">
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+        <div class="geo-charts-row">
+          <div class="card">
+            <div class="card-title">AI Discoverability Breakdown</div>
+            <div class="card-subtitle">How LLMs categorize Ledaga</div>
+            <canvas id="discoverabilityChart" height="220"></canvas>
+          </div>
+          <div class="card">
+            <div class="card-title">Share of Voice — AI Responses</div>
+            <div class="card-subtitle">When asked about CTCL treatment</div>
+            <canvas id="sovChart" height="220"></canvas>
+          </div>
+        </div>
+        <div class="geo-bottom-row">
+          <div class="card">
+            <div class="card-title">Strategic Recommendations</div>
+            <div class="card-subtitle">Priority actions to improve GEO score</div>
+            <div id="geoRecommendationsList"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Trending AI Queries</div>
+            <div class="card-subtitle">Questions asked to LLMs about CTCL</div>
+            <div id="geoTrendingQuestions"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px;">
+          <div class="card-title">Sources Referenced by LLMs</div>
+          <div class="card-subtitle">Documents cited in AI responses about Ledaga / CTCL</div>
+          <div id="geoSourcesTable" style="overflow-x:auto;margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <!-- TAB: SEO Analysis -->
+      <div class="tab-panel hidden" id="tab-seo-analysis">
+        <div class="grid-2" style="margin-bottom:16px;">
+          <div class="card">
+            <div class="card-title">Search Volume Trend</div>
+            <div class="card-subtitle">Mar 2025 – Feb 2026</div>
+            <div style="margin-bottom:12px;">
+              <div class="input-group">
+                <input type="text" class="input" id="seoSearchInput" placeholder="Enter keyword…" value="cutaneous lymphoma traitement" />
+                <button class="btn btn-primary btn-sm" id="seoSearchBtn">Search</button>
+              </div>
+            </div>
+            <canvas id="seoTrendChart" height="220"></canvas>
+          </div>
+          <div class="card">
+            <div class="card-title">Keyword Radar</div>
+            <div class="card-subtitle">Search interest by category</div>
+            <canvas id="seoRadarChart" height="220"></canvas>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title">Related Queries</div>
+          <div class="card-subtitle">Rising and trending searches (France)</div>
+          <div style="overflow-x:auto;margin-top:12px;">
+            <table class="data-table">
+              <thead><tr><th>Query</th><th>Volume Index</th><th>Trend</th><th>Type</th></tr></thead>
+              <tbody id="seoRelatedBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Regional Distribution</div>
+          <div class="card-subtitle">Search interest by French region</div>
+          <div id="seoRegionalList" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <!-- TAB: Cross-Reference -->
+      <div class="tab-panel hidden" id="tab-cross-ref">
+        <div class="card">
+          <div class="card-title">GEO Score vs Search Volume</div>
+          <div class="card-subtitle">Correlation by keyword — bubble size = strategic weight</div>
+          <canvas id="correlationChart" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════════ PAGE: PUBLICATIONS ═════════════ -->
+    <div class="page hidden" id="page-publications">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Publications</div>
+          <div class="page-subtitle">Scientific literature via OpenAlex live API</div>
+        </div>
+        <div class="filter-chip-group">
+          <button class="filter-chip active" id="pubViewList">List</button>
+          <button class="filter-chip" id="pubViewNetwork">Author Network</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px;">
+        <div class="input-group">
+          <input type="text" class="input" id="pubSearchInput" placeholder="Search publications (e.g. cutaneous lymphoma chlormethine)…" />
+          <button class="btn btn-primary" id="pubSearchBtn">Search OpenAlex</button>
+        </div>
+        <div style="margin-top:10px;" id="pubCountLabel" style="font-size:12px;color:var(--text-muted);"></div>
+      </div>
+
+      <!-- List View -->
+      <div id="pubListView">
+        <div id="pubSkeletonList">
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+        <div id="pubResultsList" style="display:none;"></div>
+        <div class="pagination" id="pubPagination" style="display:none;">
+          <button class="btn btn-secondary btn-sm" id="pubPrevBtn" disabled>← Previous</button>
+          <span class="pagination-info" id="pubPageInfo">Page 1</span>
+          <button class="btn btn-secondary btn-sm" id="pubNextBtn">Next →</button>
+        </div>
+      </div>
+
+      <!-- Network View -->
+      <div id="pubNetworkView" style="display:none;">
+        <div class="card">
+          <div class="card-title">Author Co-authorship Network</div>
+          <div id="authorNetworkPlaceholder" style="min-height:200px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:13px;">Loading network…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════════ PAGE: KOL & RISING STARS ═════════════ -->
+    <div class="page hidden" id="page-kol">
+      <div class="page-header">
+        <div>
+          <div class="page-title">KOL &amp; Rising Stars</div>
+          <div class="page-subtitle">CTCL specialist mapping — France · GFELC Network</div>
+        </div>
+        <div class="input-group">
+          <select class="select" id="kolTierFilter">
+            <option value="all">All Tiers</option>
+            <option value="1">Tier 1</option>
+            <option value="2">Tier 2</option>
+            <option value="3">Tier 3</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Personas -->
+      <div class="persona-grid">
+        <div class="persona-card">
+          <div class="persona-type">Experts</div>
+          <div class="persona-count" id="personaCountExpert">—</div>
+          <div class="persona-desc">Tier 1 national leaders</div>
+          <div id="personaExamplesExpert"></div>
+        </div>
+        <div class="persona-card">
+          <div class="persona-type">Connected</div>
+          <div class="persona-count" id="personaCountConnected">—</div>
+          <div class="persona-desc">Active on LinkedIn</div>
+          <div id="personaExamplesConnected"></div>
+        </div>
+        <div class="persona-card">
+          <div class="persona-type">Silent</div>
+          <div class="persona-count" id="personaCountSilent">—</div>
+          <div class="persona-desc">Tier 2, low digital presence</div>
+          <div id="personaExamplesSilent"></div>
+        </div>
+        <div class="persona-card">
+          <div class="persona-type">Rising</div>
+          <div class="persona-count" id="personaCountRising">—</div>
+          <div class="persona-desc">Tier 3 emergent voices</div>
+          <div id="personaExamplesRising"></div>
+        </div>
+        <div class="persona-card">
+          <div class="persona-type">Diagnostic</div>
+          <div class="persona-count" id="personaCountDiagnostic">—</div>
+          <div class="persona-desc">Pathologists / anatomo-path</div>
+          <div id="personaExamplesDiagnostic"></div>
+        </div>
+      </div>
+
+      <!-- Priority Visit Table -->
+      <div class="card" style="margin-bottom:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div>
+            <div class="card-title">Priority Visit List</div>
+            <div class="card-subtitle">Recommended engagement plan with channel and topic</div>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th><th>Name</th><th>Institution</th><th>City</th><th>Tier</th>
+                <th>Score</th><th>Channel</th><th>Topic</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="kolTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Two-column: Timeline + Rising Stars -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">KOL Activity Timeline</div>
+          <div class="card-subtitle">Recent publications, congress, and social signals</div>
+          <div id="kolTimeline" style="margin-top:12px;"></div>
+        </div>
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <div>
+              <div class="card-title">Rising Stars (OpenAlex)</div>
+              <div class="card-subtitle">Researchers with accelerating citation velocity</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="kolLoadRisingStars">Refresh</button>
+          </div>
+          <div id="risingStarsSkeleton">
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+          </div>
+          <div id="risingStarsGrid" class="grid-2" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════════ PAGE: CLINICAL TRIALS ═════════════ -->
+    <div class="page hidden" id="page-trials">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Clinical Trials</div>
+          <div class="page-subtitle">Live data from ClinicalTrials.gov</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px;">
+        <div class="input-group">
+          <input type="text" class="input" id="trialsSearchInput" placeholder="Search trials (e.g. cutaneous T-cell lymphoma)…" />
+          <button class="btn btn-primary" id="trialsSearchBtn">Search</button>
+        </div>
+        <div id="trialsCountLabel" style="margin-top:8px;font-size:12px;color:var(--text-muted);"></div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-title">Trial Timeline (Gantt)</div>
+          <div id="trialsGantt" style="margin-top:12px;"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Phase Distribution</div>
+          <canvas id="trialsPhasesChart" height="200"></canvas>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <div id="trialsSkeletonList">
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+          </div>
+          <div id="trialsResultsList" style="display:none;"></div>
+          <div class="pagination" id="trialsPagination" style="display:none;">
+            <button class="btn btn-secondary btn-sm" id="trialsPrevBtn" disabled>← Prev</button>
+            <button class="btn btn-secondary btn-sm" id="trialsNextBtn">Next →</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Top Sponsors</div>
+          <div id="trialsSponsorsList" style="margin-top:12px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════════ PAGE: SOCIAL INTELLIGENCE ═════════════ -->
+    <div class="page hidden" id="page-social">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Social Intelligence</div>
+          <div class="page-subtitle">VisiBrain monitoring · Twitter/X · LinkedIn · Medical Forums</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-title">Sentiment Gauge</div>
+          <div class="card-subtitle">CTCL / Ledaga mentions · Feb 2026</div>
+          <canvas id="sentimentGauge" height="120"></canvas>
+          <div id="sentimentBreakdown" style="margin-top:12px;"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Social Signals Feed</div>
+          <div class="card-subtitle">Real-time mentions and posts</div>
+          <div id="signalsFeed" style="max-height:280px;overflow-y:auto;margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">Keyword Cloud</div>
+        <div class="card-subtitle">Most discussed terms across monitored channels</div>
+        <div class="word-cloud-wrap" id="wordCloudWrap"></div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-title">VisiBrain Topics</div>
+          <div class="card-subtitle">Monitoring topics from VisiBrain account</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-top:12px;" id="visibrainTopicsGrid">
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Monitoring Rules</div>
+          <div class="card-subtitle">Active keyword rules from VisiBrain</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;" id="monitoringRulesGrid">
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">VisiBrain Quotas</div>
+        <div class="card-subtitle">Account usage and limits</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:12px;" id="quotaGrid"></div>
+      </div>
+    </div>
+
+    <!-- ═════════════ PAGE: DIGITAL LANDSCAPE ═════════════ -->
+    <div class="page hidden" id="page-landscape">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Digital Landscape</div>
+          <div class="page-subtitle">Competitive positioning and digital footprint across channels</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-title">Competitive Positioning Map</div>
+          <div class="card-subtitle">GEO Score vs Social Volume — bubble size = publication reach</div>
+          <canvas id="landscapeBubbleChart" height="280"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title">KOL Density — France</div>
+          <div class="card-subtitle">Scientific influence by region</div>
+          <div id="heatmapFrance" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">AI Insights</div>
+        <div class="card-subtitle">Auto-generated strategic observations from cross-source analysis</div>
+        <div id="aiInsightsList" style="margin-top:12px;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Competitive Comparison Table</div>
+        <div class="card-subtitle">Key metrics across CTCL treatment brands</div>
+        <div style="overflow-x:auto;margin-top:12px;">
+          <table class="data-table">
+            <thead><tr><th>Brand</th><th>GEO Score</th><th>Social Volume</th><th>Publications</th><th>Active Trials</th><th>Overall Index</th></tr></thead>
+            <tbody id="competitiveTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════════ PAGE: SOURCES & CONFIG ═════════════ -->
+    <div class="page hidden" id="page-sources">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Sources &amp; Config</div>
+          <div class="page-subtitle">Data source connections, scoring weights, and agentic memory</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-title">Data Sources</div>
+          <div class="card-subtitle">Toggle active integrations for this board</div>
+          <div style="margin-top:12px;">
+            <div class="source-toggle-row">
+              <div class="source-info"><div class="source-name">OpenAlex</div><div class="source-desc">Scientific publications — live API</div></div>
+              <label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="source-toggle-row">
+              <div class="source-info"><div class="source-name">ClinicalTrials.gov</div><div class="source-desc">Clinical trial registry — live API</div></div>
+              <label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="source-toggle-row">
+              <div class="source-info"><div class="source-name">PharmaGEO (AI Visibility)</div><div class="source-desc">GEO scores for LLM citations</div></div>
+              <label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="source-toggle-row">
+              <div class="source-info"><div class="source-name">VisiBrain Social</div><div class="source-desc">Social listening &amp; monitoring</div></div>
+              <label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="source-toggle-row">
+              <div class="source-info"><div class="source-name">Google Trends</div><div class="source-desc">Search volume trends (demo mode)</div></div>
+              <label class="toggle"><input type="checkbox" /><span class="toggle-track"></span></label>
+            </div>
+            <div class="source-toggle-row">
+              <div class="source-info"><div class="source-name">ANSM / HAS</div><div class="source-desc">French regulatory database</div></div>
+              <label class="toggle"><input type="checkbox" /><span class="toggle-track"></span></label>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Intelligence Score Weights</div>
+          <div class="card-subtitle">Adjust contribution to overall index</div>
+          <div id="weightsGrid" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div>
+            <div class="card-title">Agentic Memory</div>
+            <div class="card-subtitle">Session learning log from AI analyses</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="clearMemoryBtn">Clear Memory</button>
+        </div>
+        <div id="memoryPanel"></div>
+      </div>
+    </div>
+
+    <!-- ═════════════ PAGE: REPORTS & PLANNING ═════════════ -->
+    <div class="page hidden" id="page-reports">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Reports &amp; Planning</div>
+          <div class="page-subtitle">Generate, schedule, and export intelligence reports</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm export-btn" data-format="pdf">Export PDF</button>
+          <button class="btn btn-ghost btn-sm export-btn" data-format="pptx">Export PPTX</button>
+          <button class="btn btn-ghost btn-sm export-btn" data-format="csv">Export CSV</button>
+          <button class="btn btn-primary" id="launchReportBtn">+ New Report</button>
+        </div>
+      </div>
+
+      <div class="grid-3" id="reportsGrid"></div>
+
+      <!-- Report Wizard Overlay -->
+      <div id="reportWizardOverlay" style="display:none;">
+        <div class="wizard-panel">
+          <div class="wizard-header">
+            <div class="wizard-title">New Intelligence Report</div>
+            <button class="wizard-close" id="reportWizardClose">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 3L13 13M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+          <div class="wizard-steps-row">
+            <div class="wizard-step active" data-step="1">1</div>
+            <div class="wizard-step-connector"></div>
+            <div class="wizard-step" data-step="2">2</div>
+            <div class="wizard-step-connector"></div>
+            <div class="wizard-step" data-step="3">3</div>
+            <div class="wizard-step-connector"></div>
+            <div class="wizard-step" data-step="4">4</div>
+            <div class="wizard-step-connector"></div>
+            <div class="wizard-step" data-step="5">5</div>
+          </div>
+          <div class="wizard-body" id="wizardBody"></div>
+          <div class="wizard-footer">
+            <button class="btn btn-secondary" id="wizardPrevBtn" disabled>Back</button>
+            <button class="btn btn-primary" id="wizardNextBtn">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══════════════ CHAT ═══════════════ -->
+<button class="chat-float-btn" id="chatToggleBtn" title="Aikka Copilot">
+  <span class="chat-float-dot"></span>
+  <svg viewBox="0 0 32 32" width="20" height="20">
+    <circle cx="16" cy="16" r="16" fill="none"/>
+    <path d="M16 6C12 6 8 14 8 20c0 3 2 6 8 6s8-3 8-6c0-6-4-14-8-14zm0 14c-1.5 0-3-1-3-3 0-2 1.5-5 3-5s3 3 3 5c0 2-1.5 3-3 3z" fill="#00E1FF"/>
+  </svg>
+</button>
+
+<div class="chat-overlay" id="chatOverlay">
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <div class="aikka-avatar idle" id="aikkaAvatar">
+        <svg viewBox="0 0 32 32" width="20" height="20">
+          <path d="M16 6C12 6 8 14 8 20c0 3 2 6 8 6s8-3 8-6c0-6-4-14-8-14zm0 14c-1.5 0-3-1-3-3 0-2 1.5-5 3-5s3 3 3 5c0 2-1.5 3-3 3z" fill="#00E1FF"/>
+        </svg>
+      </div>
+      <div>
+        <div class="chat-header-title">Aikka Copilot</div>
+        <div class="chat-header-subtitle" id="aikkaStatus">Online · Pharma Intelligence AI</div>
+      </div>
+    </div>
+    <button class="chat-close-btn" id="chatCloseBtn">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 3L13 13M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <!-- Welcome message injected by JS -->
+  </div>
+  <div class="chat-input-bar">
+    <input type="text" id="chatInput" placeholder="Ask about GEO scores, KOLs, trials…" />
+    <button id="chatSendBtn">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8L14 2L8 14L7 9L2 8Z" fill="white" stroke="white" stroke-width="0.5" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- Board Creation Modal -->
+<div class="modal-overlay hidden" id="boardModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="boardModalTitle">Create New Board</div>
+      <button class="modal-close" id="boardModalClose">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 3L13 13M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="wizard-steps" id="boardWizardDots" style="margin-bottom:20px;"></div>
+      <div id="boardWizardBody"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="boardWizardPrev" disabled>Back</button>
+      <button class="btn btn-primary" id="boardWizardNext">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- Global Toast -->
+<div id="globalToast"></div>
+
+<script src="./app.js"></script>
+</body>
+</html>
