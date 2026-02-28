@@ -1,1 +1,11 @@
-PLACEHOLDER_LOGO
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none">
+  <defs>
+    <linearGradient id="logoGrad" x1="24" y1="2" x2="24" y2="46" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#333"/>
+      <stop offset="100%" stop-color="#000"/>
+    </linearGradient>
+  </defs>
+  <path d="M24 2C20 2 17.5 7 15.5 12C12.5 6 8.5 3 4.5 5C1.5 7 0.5 13 2.5 19C-1 18.5 -3 20.5 -3 24.5C-3 28.5 -1 32.5 4 33.5C0 36.5 -1 40.5 1 44C3 46 7 47 11 45C10 49.5 11 53 15 54C19 55 23 51.5 24 47C25 51.5 29 55 33 54C37 53 38 49.5 37 45C41 47 45 46 47 44C49 40.5 48 36.5 44 33.5C49 32.5 51 28.5 51 24.5C51 20.5 49 18.5 45.5 19C47.5 13 46.5 7 43.5 5C39.5 3 35.5 6 32.5 12C30.5 7 28 2 24 2Z" transform="translate(0,0) scale(0.85)" fill="url(#logoGrad)"/>
+  <ellipse cx="20.4" cy="23.4" rx="5.5" ry="8" fill="white"/>
+  <text x="52" y="35" font-family="sans-serif" font-weight="400" font-size="32" fill="#111" letter-spacing="-0.5">aikka</text>
+</svg>
