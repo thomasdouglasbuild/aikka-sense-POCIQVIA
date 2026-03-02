@@ -105,10 +105,10 @@ function loadRisingStars() {
     risingStars = SPAIN_CARDIO_DATA.risingStars;
     renderRisingStarsGrid(risingStars, skeleton, grid);
   } else {
-    // Call API
+    // Call API — use pathology/therapeutic_area for topic search (not brand name)
     const cfg = data.config || {};
-    const query = cfg.brand || cfg.therapeutic_area || 'cutaneous lymphoma';
-    const country = cfg.market || 'France';
+    const query = cfg.pathology || cfg.therapeutic_area || activeBoard.indication || activeBoard.area || 'cutaneous lymphoma';
+    const country = cfg.market || activeBoard.geo || 'France';
     const url = API + '?action=kol_rising_stars&query=' + encodeURIComponent(query) + '&country=' + encodeURIComponent(country);
     fetch(url)
       .then(r => r.json())
