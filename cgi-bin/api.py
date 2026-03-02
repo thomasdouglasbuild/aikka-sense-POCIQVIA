@@ -33,6 +33,9 @@ ctx = ssl.create_default_context()
 
 def http_request(url, method="GET", data=None, headers=None, timeout=30):
     """Simple HTTP request helper."""
+    # PharmaGEO API can be slow for report operations
+    if "aikka-pharma.com" in url and ("reports" in url or "agnostic" in url):
+        timeout = max(timeout, 60)
     if headers is None:
         headers = {}
     if data and isinstance(data, dict):
@@ -61,7 +64,7 @@ def get_pharmageo_token():
             return cached["token"]
     
     result = http_request(
-        f"{PHARMAGEO_BASE}/auth/login",
+        f"{PHARMAGEO_BASE}/v1/auth/login",
         method="POST",
         data={"email": PHARMAGEO_EMAIL, "password": PHARMAGEO_PASS}
     )
@@ -76,6 +79,17 @@ def pharmageo_get(endpoint, token=None):
     return http_request(
         f"{PHARMAGEO_BASE}{endpoint}",
         headers={"Authorization": f"Bearer {token}"}
+    )
+
+def pharmageo_post(endpoint, data, token=None):
+    """POST request to PharmaGEO API."""
+    if not token:
+        token = get_pharmageo_token()
+    return http_request(
+        f"{PHARMAGEO_BASE}{endpoint}",
+        method="POST",
+        data=data,
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
     )
 
 # ---- OpenAlex ----
@@ -109,7 +123,7 @@ def search_openalex(query, page=1, per_page=25):
             "id": w.get("id", ""),
             "title": w.get("title", ""),
             "year": w.get("publication_year"),
-            "journal": w.get("primary_location", {}).get("source", {}).get("display_name", "") if w.get("primary_location") else "",
+            "journal": ((w.get("primary_location") or {}).get("source") or {}).get("display_name", ""),
             "doi": w.get("doi", ""),
             "cited_by_count": w.get("cited_by_count", 0),
             "type": w.get("type", ""),
@@ -196,19 +210,57 @@ def search_trials(query, page_size=20, page_token=None):
 
 # ---- Rising Stars Detection ----
 def find_rising_stars(query, country=None):
-    """Find rising stars: authors with rapid citation growth, recent publications, moderate h-index."""
-    params = {
-        "search": query,
-        "per_page": 50,
-        "mailto": OPENALEX_EMAIL,
-    }
+    """Find rising stars: authors with rapid citation growth, recent publications, moderate h-index.
+    Two-step approach: first find the OpenAlex topic ID, then filter authors by topic + country.
+    Falls back to keyword search if topic lookup fails.
+    """
+    # Step 1: Find the best matching OpenAlex topic
+    topic_id = None
+    try:
+        topic_params = urllib.parse.urlencode({
+            "search": query,
+            "per_page": 3,
+            "mailto": OPENALEX_EMAIL,
+        })
+        topic_data = http_request(f"{OPENALEX_BASE}/topics?{topic_params}")
+        if topic_data.get("results"):
+            # Use the first matching topic
+            topic_id = topic_data["results"][0].get("id", "")
+            # Extract short ID (e.g. "T10198" from full URL)
+            if "/" in topic_id:
+                topic_id = topic_id.split("/")[-1]
+    except Exception:
+        pass
+
+    # Step 2: Search authors by topic (or fallback to keyword search)
+    filters = []
+    if topic_id:
+        filters.append(f"topics.id:{topic_id}")
     if country:
-        params["filter"] = f"last_known_institutions.country_code:{country}"
+        filters.append(f"last_known_institutions.country_code:{country}")
+
+    params = {"per_page": 50, "mailto": OPENALEX_EMAIL}
+    if filters:
+        params["filter"] = ",".join(filters)
+        params["sort"] = "cited_by_count:desc"
+    else:
+        params["search"] = query
     
     url = f"{OPENALEX_BASE}/authors?{urllib.parse.urlencode(params)}"
     data = http_request(url)
     if "error" in data:
-        return data
+        # Fallback: try keyword search without topic filter
+        fallback_params = {
+            "search": query,
+            "per_page": 50,
+            "mailto": OPENALEX_EMAIL,
+        }
+        if country:
+            fallback_params["filter"] = f"last_known_institutions.country_code:{country}"
+        url = f"{OPENALEX_BASE}/authors?{urllib.parse.urlencode(fallback_params)}"
+        data = http_request(url)
+        if "error" in data:
+            return data
     
     stars = []
     for a in data.get("results", []):
@@ -342,7 +394,7 @@ BRAND_KNOWLEDGE = {
             {"name": "Candesartan", "generic": "candesartan", "class": "ARB", "manufacturer": "Multiple generics"},
             {"name": "Spironolactone", "generic": "spironolactone", "class": "MRA", "manufacturer": "Multiple generics"},
             {"name": "Furosemide", "generic": "furosemide", "class": "Loop Diuretic", "manufacturer": "Multiple generics"},
-            {"name": "Torasemide", "generic": "torasemide", "class": "Loop Diuretic", "manufacturer": "Multiple generics"},
+            {"name": "Torasemide", "generic": "torasemide", "class": "Loop Diuretic", "manufacturer": "Multiple generics"}
         ],
         "fr": [
             {"name": "Entresto", "generic": "sacubitril/valsartan", "class": "ARNI", "manufacturer": "Novartis"},
@@ -352,21 +404,21 @@ BRAND_KNOWLEDGE = {
             {"name": "Verquvo", "generic": "vericiguat", "class": "sGC Stimulator", "manufacturer": "Bayer"},
             {"name": "Inspra", "generic": "éplérénone", "class": "ARM", "manufacturer": "Multiple génériques"},
             {"name": "Procoralan", "generic": "ivabradine", "class": "Inhibiteur If", "manufacturer": "Servier"},
-            {"name": "Ferinject", "generic": "carboxymaltose ferrique", "class": "Fer IV", "manufacturer": "CSL Vifor"},
-        ],
+            {"name": "Ferinject", "generic": "carboxymaltose ferrique", "class": "Fer IV", "manufacturer": "CSL Vifor"}
+        ]
     },
     "oncology": {
         "fr": [
             {"name": "Ledaga", "generic": "chlormethine", "class": "Alkylant topique", "manufacturer": "Recordati"},
             {"name": "Poteligeo", "generic": "mogamulizumab", "class": "Anticorps anti-CCR4", "manufacturer": "Kyowa Kirin"},
             {"name": "Adcetris", "generic": "brentuximab vedotin", "class": "ADC anti-CD30", "manufacturer": "Takeda"},
-            {"name": "Targretin", "generic": "bexarotene", "class": "Rétinoïde RXR", "manufacturer": "Eisai"},
+            {"name": "Targretin", "generic": "bexarotene", "class": "Rétinoïde RXR", "manufacturer": "Eisai"}
         ],
         "es": [
             {"name": "Ledaga", "generic": "clormetina", "class": "Alquilante tópico", "manufacturer": "Recordati"},
-            {"name": "Poteligeo", "generic": "mogamulizumab", "class": "Anticuerpo anti-CCR4", "manufacturer": "Kyowa Kirin"},
-        ],
-    },
+            {"name": "Poteligeo", "generic": "mogamulizumab", "class": "Anticuerpo anti-CCR4", "manufacturer": "Kyowa Kirin"}
+        ]
+    }
 }
 
 
@@ -577,7 +629,7 @@ def google_trends(keyword, geo):
     # Regional breakdown
     GEO_REGIONS = {
         "ES": ["Madrid", "Cataluña", "Andalucía", "Comunidad Valenciana", "País Vasco"],
-        "FR": ["\u00cele-de-France", "Auvergne-Rhône-Alpes", "Nouvelle-Aquitaine", "Occitanie", "Provence-Alpes-Côte d'Azur"],
+        "FR": ["Île-de-France", "Auvergne-Rhône-Alpes", "Nouvelle-Aquitaine", "Occitanie", "Provence-Alpes-Côte d'Azur"],
         "GB": ["London", "South East", "North West", "West Midlands", "Scotland"],
         "DE": ["Bayern", "Nordrhein-Westfalen", "Baden-Württemberg", "Berlin", "Hamburg"],
         "US": ["California", "New York", "Texas", "Florida", "Massachusetts"],
@@ -652,7 +704,7 @@ def main():
         
         elif action == "pharmageo_brands":
             token = get_pharmageo_token()
-            raw = pharmageo_get("/brands", token)
+            raw = pharmageo_get("/v1/brands/reports", token)
             # Normalize: PharmaGEO may return list or dict with 'data' key
             if isinstance(raw, list):
                 result = {"brands": raw}
@@ -668,7 +720,7 @@ def main():
         elif action == "pharmageo_scores":
             brand_id = params.get("brand_id", "")
             token = get_pharmageo_token()
-            result = pharmageo_get(f"/brands/{brand_id}", token)
+            result = pharmageo_get(f"/v1/brands/reports/{brand_id}", token)
         
         elif action == "pharmageo_login":
             token = get_pharmageo_token()
@@ -677,14 +729,65 @@ def main():
         elif action == "pharmageo_launch":
             if body:
                 token = get_pharmageo_token()
-                result = http_request(
-                    f"{PHARMAGEO_BASE}/brands/modular",
-                    method="POST",
-                    data=body,
-                    headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
-                )
+                result = pharmageo_post("/v1/brands/reports", body, token)
             else:
                 result = {"error": "POST body required"}
+        
+        # --- PharmaGEO Agnostic Reports ---
+        elif action == "pharmageo_agnostic_list":
+            token = get_pharmageo_token()
+            result = pharmageo_get("/v1/agnostic/recurring", token)
+        
+        elif action == "pharmageo_agnostic_settings":
+            token = get_pharmageo_token()
+            result = pharmageo_get("/v1/agnostic/agnostic-report-settings", token)
+        
+        elif action == "pharmageo_agnostic_create":
+            if body:
+                token = get_pharmageo_token()
+                result = pharmageo_post("/v1/agnostic/reports", body, token)
+            else:
+                result = {"error": "POST body required"}
+        
+        elif action == "pharmageo_agnostic_report":
+            report_id = params.get("report_id", "")
+            if report_id:
+                token = get_pharmageo_token()
+                result = pharmageo_get(f"/v1/agnostic/reports/{report_id}", token)
+            else:
+                result = {"error": "report_id required"}
+        
+        elif action == "pharmageo_agnostic_pending":
+            token = get_pharmageo_token()
+            result = pharmageo_get("/v1/agnostic/reports/pending", token)
+        
+        # --- PharmaGEO Brand Reports ---
+        elif action == "pharmageo_brand_list":
+            token = get_pharmageo_token()
+            result = pharmageo_get("/v1/brands/reports", token)
+        
+        elif action == "pharmageo_brand_create":
+            if body:
+                token = get_pharmageo_token()
+                result = pharmageo_post("/v1/brands/reports", body, token)
+            else:
+                result = {"error": "POST body required"}
+        
+        elif action == "pharmageo_brand_report":
+            report_id = params.get("report_id", "")
+            if report_id:
+                token = get_pharmageo_token()
+                result = pharmageo_get(f"/v1/brands/reports/{report_id}", token)
+            else:
+                result = {"error": "report_id required"}
+        
+        elif action == "pharmageo_brand_pending":
+            token = get_pharmageo_token()
+            result = pharmageo_get("/v1/brands/reports/pending", token)
+        
+        elif action == "pharmageo_llm_available":
+            token = get_pharmageo_token()
+            result = pharmageo_get("/v1/llm/available", token)
         
         elif action == "openalex_author":
             result = get_openalex_author(params.get("author_id", ""))
@@ -715,52 +818,41 @@ def main():
                 params.get("area", ""),
                 params.get("country", "")
             )
-        
+
         elif action == "social_screen":
             result = social_screen(
                 params.get("query", ""),
                 params.get("country", "")
             )
-        
+
         elif action == "google_trends":
             result = google_trends(
                 params.get("keyword", ""),
-                params.get("geo", "FR")
+                params.get("geo", "")
             )
-        
+
         elif action == "visibrain_topics":
             result = get_visibrain_topics()
         
-        elif action == "ai_chat":
-            if body:
-                message = body.get("message", "")
-                context = body.get("context", {})
-                # AI chat via PharmaGEO or simple echo for now
-                token = get_pharmageo_token()
-                if token:
-                    resp = http_request(
-                        f"{PHARMAGEO_BASE}/chat",
-                        method="POST",
-                        data={"message": message, "context": context},
-                        headers={"Authorization": f"Bearer {token}"}
-                    )
-                    result = resp if not resp.get("error") else {"reply": f"Chat endpoint unavailable: {resp['error']}"}
-                else:
-                    result = {"reply": "Authentication required for AI chat."}
-            else:
-                result = {"error": "POST body required"}
+        elif action == "health":
+            result = {"status": "ok", "timestamp": time.time(), "apis": {
+                "pharmageo": bool(get_pharmageo_token()),
+                "openalex": True,
+                "clinicaltrials": True,
+                "visibrain": Path("visibrain_topics.json").exists(),
+            }}
         
         else:
-            result = {"error": f"Unknown action: {action}"}
+            result = {
+                "error": "Unknown action. Available: search_openalex, search_trials, pharmageo_brands, pharmageo_scores, pharmageo_launch, pharmageo_login, openalex_author, kol_rising_stars, aggregate_score, visibrain_topics, health, detect_brands, social_screen, google_trends"
+            }
     
     except Exception as e:
         result = {"error": str(e)}
     
-    # Output CGI headers + JSON
+    # Output
     print("Content-Type: application/json")
     print("Access-Control-Allow-Origin: *")
-    print("Access-Control-Allow-Methods: GET, POST, OPTIONS")
-    print("Access-Control-Allow-Headers: Content-Type, Authorization")
     print()
     print(json.dumps(result, ensure_ascii=False, default=str))
 
