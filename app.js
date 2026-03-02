@@ -53,3 +53,56 @@ const state = {
   agenticMemory: [],
   sourceWeights: { geo: 30, publications: 25, social: 20, trials: 15, kol: 10 }
 };
+
+/* ═══════════════════════════════════════════════════════════════════
+   4. BOARD MANAGEMENT
+═══════════════════════════════════════════════════════════════════ */
+const boards = [
+  {
+    id: 'ledaga-ctcl-fr',
+    name: 'Ledaga · CTCL · France',
+    brand: 'Ledaga',
+    area: 'Lymphomes T Cutanés',
+    geo: 'France',
+    competitor: 'Poteligeo',
+    status: 'active',
+    lastUpdated: '2026-02-27',
+    geoScore: 49,
+    publications: 247,
+    kols: 29,
+    trials: 7
+  }
+];
+
+let activeBoard = boards[0];
+
+function getActiveBoardData() {
+  if (activeBoard.id === 'ledaga-ctcl-fr') return PLATFORM_DATA;
+  if (typeof SPAIN_CARDIO_DATA !== 'undefined' && activeBoard.id && activeBoard.id.includes('spain')) return SPAIN_CARDIO_DATA;
+  // For dynamically generated boards, build from activeBoard.generatedData
+  const gd = activeBoard.generatedData || {};
+  return {
+    config: {
+      brand: activeBoard.brand || '',
+      therapeutic_area: activeBoard.area || '',
+      market: activeBoard.geo || '',
+      pathology: activeBoard.indication || '',
+      competitor: activeBoard.competitor || '',
+      last_updated: new Date().toISOString()
+    },
+    pharmageo: {
+      scores: gd.geoScores || [],
+      cloudwords: gd.cloudwords || [],
+      trending_questions: gd.trendingQuestions || [],
+      competitive: gd.competitive || [],
+      sources: gd.sources || [],
+      recommendations: gd.recommendations || [],
+      discoverability: gd.discoverability || { brandRecognition: 0, innOnly: 0, drugClass: 0, notFound: 100 },
+      agnostic: gd.agnostic || { overview: {}, products: [] }
+    },
+    kols: { france: gd.kols || [] },
+    publications: gd.publications || [],
+    treatments: { clinical_trials_france: gd.trials || [], emerging_therapies: [] },
+    trending_topics: gd.trending_topics || []
+  };
+}
