@@ -320,6 +320,298 @@ def compute_aggregate_score(brand_id=None, brand_name=None, competitor_name=None
     
     return scores
 
+# ---- Brand Detection ----
+BRAND_KNOWLEDGE = {
+    "cardiology": {
+        "es": [
+            {"name": "Entresto", "generic": "sacubitril/valsartan", "class": "ARNI", "manufacturer": "Novartis"},
+            {"name": "Forxiga", "generic": "dapagliflozin", "class": "SGLT2 Inhibitor", "manufacturer": "AstraZeneca"},
+            {"name": "Jardiance", "generic": "empagliflozin", "class": "SGLT2 Inhibitor", "manufacturer": "Boehringer Ingelheim / Eli Lilly"},
+            {"name": "Kerendia", "generic": "finerenone", "class": "nsMRA", "manufacturer": "Bayer"},
+            {"name": "Verquvo", "generic": "vericiguat", "class": "sGC Stimulator", "manufacturer": "Bayer"},
+            {"name": "Inspra", "generic": "eplerenone", "class": "MRA", "manufacturer": "Multiple generics"},
+            {"name": "Procoralan", "generic": "ivabradine", "class": "If-Channel Inhibitor", "manufacturer": "Servier"},
+            {"name": "Ferinject", "generic": "ferric carboxymaltose", "class": "IV Iron", "manufacturer": "CSL Vifor"},
+            {"name": "Simdax", "generic": "levosimendan", "class": "Inodilator", "manufacturer": "Orion Pharma"},
+            {"name": "Veltassa", "generic": "patiromer", "class": "Potassium Binder", "manufacturer": "Vifor Pharma"},
+            {"name": "Lokelma", "generic": "sodium zirconium cyclosilicate", "class": "Potassium Binder", "manufacturer": "AstraZeneca"},
+            {"name": "Bisoprolol", "generic": "bisoprolol", "class": "Beta-Blocker", "manufacturer": "Multiple generics"},
+            {"name": "Carvedilol", "generic": "carvedilol", "class": "Beta-Blocker", "manufacturer": "Multiple generics"},
+            {"name": "Ramipril", "generic": "ramipril", "class": "ACE Inhibitor", "manufacturer": "Multiple generics"},
+            {"name": "Enalapril", "generic": "enalapril", "class": "ACE Inhibitor", "manufacturer": "Multiple generics"},
+            {"name": "Candesartan", "generic": "candesartan", "class": "ARB", "manufacturer": "Multiple generics"},
+            {"name": "Spironolactone", "generic": "spironolactone", "class": "MRA", "manufacturer": "Multiple generics"},
+            {"name": "Furosemide", "generic": "furosemide", "class": "Loop Diuretic", "manufacturer": "Multiple generics"},
+            {"name": "Torasemide", "generic": "torasemide", "class": "Loop Diuretic", "manufacturer": "Multiple generics"},
+        ],
+        "fr": [
+            {"name": "Entresto", "generic": "sacubitril/valsartan", "class": "ARNI", "manufacturer": "Novartis"},
+            {"name": "Forxiga", "generic": "dapagliflozin", "class": "SGLT2 Inhibitor", "manufacturer": "AstraZeneca"},
+            {"name": "Jardiance", "generic": "empagliflozin", "class": "SGLT2 Inhibitor", "manufacturer": "Boehringer Ingelheim / Eli Lilly"},
+            {"name": "Kerendia", "generic": "finerenone", "class": "nsMRA", "manufacturer": "Bayer"},
+            {"name": "Verquvo", "generic": "vericiguat", "class": "sGC Stimulator", "manufacturer": "Bayer"},
+            {"name": "Inspra", "generic": "éplérénone", "class": "ARM", "manufacturer": "Multiple génériques"},
+            {"name": "Procoralan", "generic": "ivabradine", "class": "Inhibiteur If", "manufacturer": "Servier"},
+            {"name": "Ferinject", "generic": "carboxymaltose ferrique", "class": "Fer IV", "manufacturer": "CSL Vifor"},
+        ],
+    },
+    "oncology": {
+        "fr": [
+            {"name": "Ledaga", "generic": "chlormethine", "class": "Alkylant topique", "manufacturer": "Recordati"},
+            {"name": "Poteligeo", "generic": "mogamulizumab", "class": "Anticorps anti-CCR4", "manufacturer": "Kyowa Kirin"},
+            {"name": "Adcetris", "generic": "brentuximab vedotin", "class": "ADC anti-CD30", "manufacturer": "Takeda"},
+            {"name": "Targretin", "generic": "bexarotene", "class": "Rétinoïde RXR", "manufacturer": "Eisai"},
+        ],
+        "es": [
+            {"name": "Ledaga", "generic": "clormetina", "class": "Alquilante tópico", "manufacturer": "Recordati"},
+            {"name": "Poteligeo", "generic": "mogamulizumab", "class": "Anticuerpo anti-CCR4", "manufacturer": "Kyowa Kirin"},
+        ],
+    },
+}
+
+
+def detect_brands(area, country):
+    """Return auto-detected brands for a therapeutic area + country.
+    Falls back to OpenAlex-sourced drug discovery if no local knowledge found.
+    """
+    area_key = area.lower().replace(" ", "_")
+    country_lower = country.lower()
+
+    # Map country name to 2-letter code if needed
+    COUNTRY_MAP = {
+        "spain": "es", "españa": "es", "es": "es",
+        "france": "fr", "fr": "fr",
+        "germany": "de", "de": "de",
+        "italy": "it", "it": "it",
+        "uk": "gb", "united kingdom": "gb", "gb": "gb",
+        "us": "us", "usa": "us", "united states": "us",
+    }
+    cc = COUNTRY_MAP.get(country_lower, country_lower[:2])
+
+    # Fuzzy area match
+    matched_area = None
+    for kb_area in BRAND_KNOWLEDGE:
+        if kb_area in area_key or area_key in kb_area:
+            matched_area = kb_area
+            break
+        # Extra aliases
+        aliases = {
+            "cardiology": ["cardio", "heart failure", "hf", "insuficiencia", "insuffisance"],
+            "oncology": ["onco", "lymphoma", "ctcl", "cancer", "tumour", "tumor"],
+        }
+        for kb_area2, alts in aliases.items():
+            if any(a in area_key for a in alts):
+                matched_area = kb_area2
+                break
+        if matched_area:
+            break
+
+    if matched_area and matched_area in BRAND_KNOWLEDGE:
+        country_brands = BRAND_KNOWLEDGE[matched_area].get(cc)
+        if not country_brands:
+            # Fallback to first available country list in that area
+            country_brands = next(iter(BRAND_KNOWLEDGE[matched_area].values()), [])
+        return {
+            "area": area,
+            "country": country,
+            "source": "local_knowledge",
+            "brands": country_brands,
+        }
+
+    # Fallback: OpenAlex search for drugs in the area
+    try:
+        params = urllib.parse.urlencode({
+            "search": f"{area} drug treatment",
+            "filter": "type:article",
+            "per_page": 20,
+            "mailto": OPENALEX_EMAIL,
+        })
+        data = http_request(f"{OPENALEX_BASE}/works?{params}")
+        drug_mentions = {}
+        for w in data.get("results", []):
+            title = w.get("title", "") or ""
+            for concept in w.get("concepts", []):
+                cname = concept.get("display_name", "")
+                if concept.get("level", 99) <= 3 and cname:
+                    drug_mentions[cname] = drug_mentions.get(cname, 0) + 1
+        top_drugs = sorted(drug_mentions.items(), key=lambda x: -x[1])[:15]
+        return {
+            "area": area,
+            "country": country,
+            "source": "openalex_inference",
+            "brands": [
+                {"name": d[0], "generic": "", "class": "inferred", "manufacturer": ""}
+                for d in top_drugs
+            ],
+        }
+    except Exception as e:
+        return {"area": area, "country": country, "brands": [], "error": str(e)}
+
+
+# ---- Social Screen (No-VisiBrain fallback) ----
+def social_screen(query, country):
+    """Simulated social media presence screening for KOLs.
+    Returns mock social presence data when VisiBrain is unavailable.
+    """
+    import hashlib
+
+    seed = int(hashlib.md5(f"{query}{country}".encode()).hexdigest(), 16)
+
+    def seeded_int(offset, lo, hi):
+        return lo + ((seed + offset) % (hi - lo + 1))
+
+    def seeded_float(offset, lo, hi, decimals=1):
+        raw = (seed + offset) % 1000
+        return round(lo + (raw / 1000) * (hi - lo), decimals)
+
+    platforms = [
+        {
+            "platform": "Twitter / X",
+            "handle": f"@{query.lower().replace(' ', '_')[:20]}",
+            "followers": seeded_int(1, 200, 18000),
+            "following": seeded_int(2, 50, 2000),
+            "tweets_total": seeded_int(3, 50, 5000),
+            "avg_engagement_rate": seeded_float(4, 0.5, 4.5),
+            "recent_activity": "Active" if seeded_int(5, 0, 1) else "Moderate",
+            "hcp_topics": ["#CardioTwitter", "#HeartFailure", "#ESCCongress"]
+            if "cardio" in country.lower() or "heart" in query.lower()
+            else ["#Oncology", "#Dermatology", "#CTCL"],
+        },
+        {
+            "platform": "LinkedIn",
+            "connections": seeded_int(6, 100, 3000),
+            "followers": seeded_int(7, 50, 5000),
+            "posts_last_6mo": seeded_int(8, 0, 30),
+            "avg_post_likes": seeded_int(9, 2, 120),
+            "profile_completeness": seeded_int(10, 60, 100),
+        },
+        {
+            "platform": "ResearchGate",
+            "rg_score": seeded_float(11, 5.0, 42.0),
+            "reads_total": seeded_int(12, 500, 80000),
+            "citations": seeded_int(13, 10, 5000),
+            "followers": seeded_int(14, 5, 800),
+        },
+    ]
+
+    overall_score = seeded_int(15, 20, 95)
+    activity_level = (
+        "High" if overall_score >= 70
+        else "Moderate" if overall_score >= 40
+        else "Low"
+    )
+
+    return {
+        "query": query,
+        "country": country,
+        "source": "simulated",
+        "note": "VisiBrain integration not available — simulated data based on KOL profile hash. For accurate data, connect VisiBrain.",
+        "overall_social_score": overall_score,
+        "activity_level": activity_level,
+        "platforms": platforms,
+        "digital_presence_summary": {
+            "primary_channel": "Twitter / X" if seeded_int(16, 0, 1) else "LinkedIn",
+            "content_focus": "Clinical research & guidelines" if seeded_int(17, 0, 2) < 2 else "Patient education",
+            "influence_tier": "Macro-KOL" if overall_score >= 75 else "Mid-tier" if overall_score >= 45 else "Micro",
+            "engagement_quality": "High" if seeded_float(18, 0, 1) > 0.5 else "Moderate",
+        },
+    }
+
+
+# ---- Google Trends (Simulated) ----
+def google_trends(keyword, geo):
+    """Simulated Google Trends data for the SEO tab.
+    Returns 12 months of search volume data, related queries, and regional breakdown.
+    """
+    import hashlib
+
+    seed = int(hashlib.md5(f"{keyword}{geo}".encode()).hexdigest(), 16)
+
+    def seeded_int(offset, lo, hi):
+        return lo + ((seed + offset) % (hi - lo + 1))
+
+    months = [
+        "Mar 2025", "Apr 2025", "May 2025", "Jun 2025",
+        "Jul 2025", "Aug 2025", "Sep 2025", "Oct 2025",
+        "Nov 2025", "Dec 2025", "Jan 2026", "Feb 2026",
+    ]
+
+    # Generate a believable trend curve (base + seasonal variation)
+    base = seeded_int(1, 30, 80)
+    timeline = []
+    for i, month in enumerate(months):
+        delta = seeded_int(i + 100, -15, 20)
+        # add slight seasonal bump in Sep-Nov (congress season)
+        seasonal = 10 if 6 <= i <= 8 else 0
+        value = max(5, min(100, base + delta + seasonal))
+        timeline.append({"month": month, "value": value})
+
+    # Related queries: rising
+    related_terms = [
+        f"{keyword} guidelines",
+        f"{keyword} clinical trial",
+        f"{keyword} mechanism",
+        f"{keyword} side effects",
+        f"{keyword} vs placebo",
+        f"{keyword} efficacy",
+        f"{keyword} Spain" if geo in ("ES", "es") else f"{keyword} France",
+    ]
+    rising = [
+        {
+            "query": related_terms[i % len(related_terms)],
+            "value": seeded_int(i + 200, 50, 5000),
+            "trend": "+" + str(seeded_int(i + 300, 50, 500)) + "%",
+        }
+        for i in range(5)
+    ]
+
+    # Top queries
+    top = [
+        {
+            "query": related_terms[i % len(related_terms)],
+            "value": seeded_int(i + 400, 30, 100),
+        }
+        for i in range(5)
+    ]
+
+    # Regional breakdown
+    GEO_REGIONS = {
+        "ES": ["Madrid", "Cataluña", "Andalucía", "Comunidad Valenciana", "País Vasco"],
+        "FR": ["\u00cele-de-France", "Auvergne-Rhône-Alpes", "Nouvelle-Aquitaine", "Occitanie", "Provence-Alpes-Côte d'Azur"],
+        "GB": ["London", "South East", "North West", "West Midlands", "Scotland"],
+        "DE": ["Bayern", "Nordrhein-Westfalen", "Baden-Württemberg", "Berlin", "Hamburg"],
+        "US": ["California", "New York", "Texas", "Florida", "Massachusetts"],
+    }
+    regions = GEO_REGIONS.get(geo.upper(), GEO_REGIONS["ES"])
+    regional = [
+        {"region": r, "value": seeded_int(i + 500, 40, 100)}
+        for i, r in enumerate(regions)
+    ]
+    regional.sort(key=lambda x: -x["value"])
+
+    avg_volume = round(sum(t["value"] for t in timeline) / len(timeline))
+    trend_direction = "up" if timeline[-1]["value"] > timeline[0]["value"] else "down"
+
+    return {
+        "keyword": keyword,
+        "geo": geo,
+        "source": "simulated",
+        "note": "Simulated Google Trends data — for production use, integrate Google Trends API or SerpAPI.",
+        "summary": {
+            "avg_monthly_volume_index": avg_volume,
+            "trend_12mo": trend_direction,
+            "peak_month": max(timeline, key=lambda x: x["value"])["month"],
+            "trough_month": min(timeline, key=lambda x: x["value"])["month"],
+        },
+        "timeline": timeline,
+        "related_queries": {
+            "rising": rising,
+            "top": top,
+        },
+        "regional_breakdown": regional,
+    }
+
+
 # ---- VisiBrain topics (from cached file) ----
 def get_visibrain_topics():
     """Return cached VisiBrain topics info."""
@@ -418,28 +710,57 @@ def main():
                 "detail": raw
             }
         
+        elif action == "detect_brands":
+            result = detect_brands(
+                params.get("area", ""),
+                params.get("country", "")
+            )
+        
+        elif action == "social_screen":
+            result = social_screen(
+                params.get("query", ""),
+                params.get("country", "")
+            )
+        
+        elif action == "google_trends":
+            result = google_trends(
+                params.get("keyword", ""),
+                params.get("geo", "FR")
+            )
+        
         elif action == "visibrain_topics":
             result = get_visibrain_topics()
         
-        elif action == "health":
-            result = {"status": "ok", "timestamp": time.time(), "apis": {
-                "pharmageo": bool(get_pharmageo_token()),
-                "openalex": True,
-                "clinicaltrials": True,
-                "visibrain": Path("visibrain_topics.json").exists(),
-            }}
+        elif action == "ai_chat":
+            if body:
+                message = body.get("message", "")
+                context = body.get("context", {})
+                # AI chat via PharmaGEO or simple echo for now
+                token = get_pharmageo_token()
+                if token:
+                    resp = http_request(
+                        f"{PHARMAGEO_BASE}/chat",
+                        method="POST",
+                        data={"message": message, "context": context},
+                        headers={"Authorization": f"Bearer {token}"}
+                    )
+                    result = resp if not resp.get("error") else {"reply": f"Chat endpoint unavailable: {resp['error']}"}
+                else:
+                    result = {"reply": "Authentication required for AI chat."}
+            else:
+                result = {"error": "POST body required"}
         
         else:
-            result = {
-                "error": "Unknown action. Available: search_openalex, search_trials, pharmageo_brands, pharmageo_scores, pharmageo_launch, pharmageo_login, openalex_author, kol_rising_stars, aggregate_score, visibrain_topics, health"
-            }
+            result = {"error": f"Unknown action: {action}"}
     
     except Exception as e:
         result = {"error": str(e)}
     
-    # Output
+    # Output CGI headers + JSON
     print("Content-Type: application/json")
     print("Access-Control-Allow-Origin: *")
+    print("Access-Control-Allow-Methods: GET, POST, OPTIONS")
+    print("Access-Control-Allow-Headers: Content-Type, Authorization")
     print()
     print(json.dumps(result, ensure_ascii=False, default=str))
 
